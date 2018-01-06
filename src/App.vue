@@ -7,9 +7,9 @@
         <span>{{element }}</span>
       </div>
     </section>
-    <!-- <button @click="resetBoard()">Reset</button>
+    <button @click="resetBoard()">Reset</button>
     <button @click="updateBoardValue({cell:{x:0,y:0},value:10})">click</button>
-    <button @click="random()">random</button> -->
+    <button @click="random()">random</button>
   </div>
 </template>
 
@@ -20,6 +20,28 @@ import { mapMutations, mapActions, mapState } from 'vuex'
 
 export default Vue.extend({
   name: 'app',
+  mounted() {
+    window.addEventListener('keyup', e => {
+      switch (e.keyCode) {
+        case 37: // left arrow
+          console.log('left arrow')
+          this.moveLeft()
+          break
+        case 38: // up arrow
+          console.log('up arrow')
+          this.moveUp()
+          break
+        case 39: // right arrow
+          console.log('right arrow')
+          this.moveRight()
+          break
+        case 40: // down arrow
+          console.log('down arrow')
+          this.moveDown()
+          break
+      }
+    })
+  },
   methods: {
     ...mapMutations(['resetBoard', 'updateCell', 'random']),
     ...mapActions(['moveCell', 'mergeCells'])
