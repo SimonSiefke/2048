@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { Board, Cell } from './board'
-import { randomEmptyCell } from './helpers'
 
 Vue.use(Vuex)
+
 interface State {
   board: Board
 }
@@ -23,8 +23,10 @@ const mutations = {
     state.board.set(cell, 0)
   },
   random(state: State) {
-    const newCell = randomEmptyCell(state.board)
-    state.board.set(newCell, 2)
+    const newCell = state.board.randomEmptyCell()
+    if (newCell) {
+      state.board.set(newCell, 2)
+    }
   }
 }
 

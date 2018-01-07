@@ -1,5 +1,5 @@
 import Vue from 'vue'
-
+import { randomIntBetween } from './helpers'
 export interface Cell {
   x: number
   y: number
@@ -21,12 +21,18 @@ export class Board {
   _convertCellToIndex(cell: Cell) {
     return cell.x * this.size + cell.y
   }
-  // custom reduce function
-  _reduce(fn: Function, acc: any) {
-    return this.board.reduce((ac, value, index) => {
-      const cell = this._convertIndexToCell(index)
-      return fn(ac, value, cell)
-    }, acc)
+  _emptyCells() {
+    return this.board
+      .filter(value => value)
+      .map((value, index) => this._convertIndexToCell(index))
+  }
+  randomEmptyCell() {
+    const emptyCellsIndices = this._emptyCells()
+    if (emptyCellsIndices.length > 0) {
+      const index = randomIntBetween(0, emptyCellsIndices.length - 1)
+      return emptyCellsIndices[index]
+    }
+    return null
   }
 
   get(cell: Cell) {
