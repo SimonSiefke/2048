@@ -8,8 +8,10 @@
       </div>
     </section>
     <button @click="resetBoard()">Reset</button>
-    <button @click="updateBoardValue({cell:{x:0,y:0},value:10})">click</button>
     <button @click="random()">random</button>
+    {{board.includesCell({ x:0, y:4 })}}
+    <button @click="move()">right</button>
+    {{this.board._emptyCells()}}
   </div>
 </template>
 
@@ -21,6 +23,7 @@ import { mapMutations, mapActions, mapState } from 'vuex'
 export default Vue.extend({
   name: 'app',
   mounted() {
+    this.move()
     window.addEventListener('keyup', e => {
       switch (e.keyCode) {
         case 37: // left arrow
@@ -44,7 +47,7 @@ export default Vue.extend({
   },
   methods: {
     ...mapMutations(['resetBoard', 'updateCell', 'random']),
-    ...mapActions(['moveCell', 'mergeCells'])
+    ...mapActions(['moveCell', 'mergeCells', 'move'])
   },
   computed: {
     ...mapState(['board', 'boardSize'])
@@ -98,19 +101,22 @@ body {
 }
 
 // Read the colors from the colors.json file and apply them
-colors = json('colors.json', {hash:true});
-backgroundColors = colors.backgroundColors
-foregroundColors = colors.foregroundColors
+colors = json('colors.json', { hash: true });
+backgroundColors = colors.backgroundColors;
+foregroundColors = colors.foregroundColors;
 
-for value, bg in backgroundColors
-  backgroundColor = bg[0]
-  isDark = bg[1]
+for value, bg in backgroundColors {
+  backgroundColor = bg[0];
+  isDark = bg[1];
 
-  .value-{value}
-    background backgroundColor
-    if isDark
-      color foregroundColors["light"]
-    else
-      color foregroundColors["dark"]
+  .value-{value} {
+    background: backgroundColor;
 
+    if (isDark) {
+      color: foregroundColors['light'];
+    } else {
+      color: foregroundColors['dark'];
+    }
+  }
+}
 </style>

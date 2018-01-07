@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import { randomIntBetween } from './helpers'
-export interface Cell {
-  x: number
-  y: number
-}
+import { Cell, Direction, DirectionVector } from './types'
 
 export class Board {
   size: number
@@ -22,9 +19,11 @@ export class Board {
     return cell.x * this.size + cell.y
   }
   _emptyCells() {
-    return this.board
-      .filter(value => value)
-      .map((value, index) => this._convertIndexToCell(index))
+    return this.board.reduce(
+      (acc: Cell[], value: number, index: number): Cell[] =>
+        value ? acc : acc.concat(this._convertIndexToCell(index)),
+      []
+    )
   }
   randomEmptyCell() {
     const emptyCellsIndices = this._emptyCells()
@@ -40,7 +39,48 @@ export class Board {
   }
   set(cell: Cell, value: number) {
     // without the set method, Vue cannot detect this change to the array
-    Vue.set(this.board, cell.x * this.size + cell.y, value)
+    Vue.set(this.board, this._convertCellToIndex(cell), value)
+  }
+  includesCell(cell: Cell) {
+    return (
+      0 <= cell.x && cell.x < this.size && 0 <= cell.y && cell.y < this.size
+    )
+  }
+  isEmpty(cell: Cell) {
+    return this.get(cell)
+  }
+  farthestNonEmptyCell(startingCell: Cell, direction: any) {
+    let current
+    let next: Cell | null = { ...startingCell }
+    do {
+      current = next
+      next = this.nextCell(next, direction)
+    } while (next && this.isEmpty(next))
+    return current
+  }
+  /** returns the farthest position the element can move to the given direction
+   returns null if it can't move any further */
+  farthestPosition(cell: Cell, direction: DirectionVector): Cell | null {
+    let next: Cell = cell
+    do {
+      const nextnext = this.nextCell(next, direction)
+      if (nextnext) {
+        next = nextnext
+      } else {
+        return next
+      }
+    } while (true)
+  }
+
+  nextCell(cell: Cell, direction: DirectionVector) {
+    const newCell = {
+      x: cell.x + direction.x,
+      y: cell.y + direction.y
+    }
+    if (this.includesCell(newCell)) {
+      return newCell
+    }
+    return null
   }
   // keys() {
   //   return this.board.map(x => this.convertToCell(x))

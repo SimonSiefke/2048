@@ -1,8 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { Board, Cell } from './board'
+import { Board } from '~/board'
+import { Cell } from '~/types'
 
 Vue.use(Vuex)
+
+const vectors = {
+  up: { x: 0, y: -1 }, // Up
+  right: { x: 1, y: 0 }, // Right
+  down: { x: 0, y: 1 }, // Down
+  left: { x: -1, y: 0 } // Left
+}
 
 interface State {
   board: Board
@@ -51,6 +59,25 @@ const actions = {
     commit('deleteCell', oldCell1)
     commit('deleteCell', oldCell2)
     commit('updateCell', newCell, newValue)
+  },
+  move({ state, commit }: { state: State; commit: Function }) {
+    const c = { x: 0, y: 2 }
+    commit('updateCell', { cell: c, value: 2 })
+
+    const x = 0
+    const direction = {
+      x: 0,
+      y: 1
+    }
+    const next = state.board.nextCell(c, direction)
+    if (next && state.board.get(next) === state.board.get(c)) {
+      console.log('merge')
+    }
+
+    console.table(state.board.farthestPosition(c, direction))
+    // for (let y = state.board.size; y >= 0; y--) {
+    //   // const next = state.board.n
+    // }
   }
 }
 
