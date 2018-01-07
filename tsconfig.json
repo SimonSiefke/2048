@@ -10,12 +10,18 @@
       "es5",
       "es6",
       "es2015.promise"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "src/*"
+      ]
+    }
   },
   "include": [
     "./src/**/*.ts"
   ],
-  "files" : [
+  "files": [
     "vue-shims.d.ts"
   ]
 }
