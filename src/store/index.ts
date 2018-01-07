@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { Board } from '~/board'
+import { Board } from '~/Board'
 import { Cell } from '~/types'
 
 Vue.use(Vuex)
@@ -25,15 +25,15 @@ const mutations = {
     state.board.reset()
   },
   updateCell(state: State, { cell, value }: { cell: Cell; value: number }) {
-    state.board.set(cell, value)
+    state.board.setValue(cell, value)
   },
   deleteCell(state: State, cell: Cell) {
-    state.board.set(cell, 0)
+    state.board.setValue(cell, 0)
   },
   random(state: State) {
     const newCell = state.board.randomEmptyCell()
     if (newCell) {
-      state.board.set(newCell, 2)
+      state.board.setValue(newCell, 2)
     }
   }
 }
@@ -43,41 +43,56 @@ const actions = {
     { state, commit }: { state: State; commit: Function },
     { fromCell, toCell }: { fromCell: Cell; toCell: Cell }
   ) {
-    const newValue = state.board.get(fromCell)
+    const newValue = state.board.getValue(fromCell)
     commit('deleteCell', fromCell)
-    commit('updateCell', { cell: toCell, newValue })
+    commit('updateCell', { cell: toCell, value: newValue })
   },
   mergeCells(
     { state, commit }: { state: State; commit: Function },
-    {
-      oldCell1,
-      oldCell2,
-      newCell
-    }: { oldCell1: Cell; oldCell2: Cell; newCell: Cell }
+    { oldCell, newCell }: { oldCell: Cell; newCell: Cell }
   ) {
-    const newValue = state.board.get(oldCell1) * 2
-    commit('deleteCell', oldCell1)
-    commit('deleteCell', oldCell2)
-    commit('updateCell', newCell, newValue)
+    const newValue = state.board.getValue(oldCell) * 2
+    commit('deleteCell', oldCell)
+    commit('updateCell', { cell: newCell, value: newValue })
   },
-  move({ state, commit }: { state: State; commit: Function }) {
-    const c = { x: 0, y: 2 }
-    commit('updateCell', { cell: c, value: 2 })
+  move({
+    state,
+    dispatch,
+    commit
+  }: {
+    state: State
+    commit: Function
+    dispatch: Function
+  }) {
+    const currentCell = { x: 0, y: 0 }
+    commit('updateCell', { cell: currentCell, value: 2 })
 
     const x = 0
     const direction = {
       x: 0,
       y: 1
     }
-    const next = state.board.nextCell(c, direction)
-    if (next && state.board.get(next) === state.board.get(c)) {
-      console.log('merge')
-    }
 
-    console.table(state.board.farthestPosition(c, direction))
-    // for (let y = state.board.size; y >= 0; y--) {
-    //   // const next = state.board.n
-    // }
+    // the farthest cell to which the current cell can move into the given direction
+    const farthestCell = state.board.farthestPosition(currentCell, direction)
+
+    // if the current cell can move
+    if (farthestCell) {
+      console.table(farthestCell)
+      // get the next cell in the given direction
+      const next = state.board.nextCell(farthestCell, direction)
+
+      // if the current cell can merge with the next one
+      if (
+        next &&
+        state.board.getValue(next) === state.board.getValue(currentCell)
+      ) {
+        dispatch('mergeCells', { oldCell: currentCell, newCell: next })
+        console.log('merge')
+      } else {
+        dispatch('moveCell', { fromCell: currentCell, toCell: farthestCell })
+      }
+    }
   }
 }
 

@@ -9,9 +9,7 @@
     </section>
     <button @click="resetBoard()">Reset</button>
     <button @click="random()">random</button>
-    {{board.includesCell({ x:0, y:4 })}}
-    <button @click="move()">right</button>
-    {{this.board._emptyCells()}}
+    <button @click="move()">move</button>
   </div>
 </template>
 
@@ -23,7 +21,6 @@ import { mapMutations, mapActions, mapState } from 'vuex'
 export default Vue.extend({
   name: 'app',
   mounted() {
-    this.move()
     window.addEventListener('keyup', e => {
       switch (e.keyCode) {
         case 37: // left arrow

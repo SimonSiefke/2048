@@ -2,6 +2,7 @@ import Vue from 'vue'
 import { randomIntBetween } from './helpers'
 import { Cell, Direction, DirectionVector } from './types'
 
+// TODO make Board extend Array class
 export class Board {
   size: number
   board: number[]
@@ -34,10 +35,10 @@ export class Board {
     return null
   }
 
-  get(cell: Cell) {
+  getValue(cell: Cell) {
     return this.board[this._convertCellToIndex(cell)]
   }
-  set(cell: Cell, value: number) {
+  setValue(cell: Cell, value: number) {
     // without the set method, Vue cannot detect this change to the array
     Vue.set(this.board, this._convertCellToIndex(cell), value)
   }
@@ -47,7 +48,7 @@ export class Board {
     )
   }
   isEmpty(cell: Cell) {
-    return this.get(cell)
+    return !this.getValue(cell)
   }
   farthestNonEmptyCell(startingCell: Cell, direction: any) {
     let current
@@ -60,16 +61,14 @@ export class Board {
   }
   /** returns the farthest position the element can move to the given direction
    returns null if it can't move any further */
-  farthestPosition(cell: Cell, direction: DirectionVector): Cell | null {
-    let next: Cell = cell
+  farthestPosition(cell: Cell, direction: DirectionVector) {
+    let next: Cell
+    let nextnext: Cell | null = { ...cell }
     do {
-      const nextnext = this.nextCell(next, direction)
-      if (nextnext) {
-        next = nextnext
-      } else {
-        return next
-      }
-    } while (true)
+      next = nextnext
+      nextnext = this.nextCell(nextnext, direction)
+    } while (nextnext && this.isEmpty(nextnext))
+    return next
   }
 
   nextCell(cell: Cell, direction: DirectionVector) {
