@@ -5,7 +5,7 @@ function randomIntBetween(min: number, max: number) {
 }
 
 function emptyCells(board: Board) {
-  return board.reduce(
+  return board._reduce(
     (fields: any, value: number, cell: Cell) =>
       value ? fields : fields.concat(cell),
     []
