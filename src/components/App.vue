@@ -1,15 +1,30 @@
 <template>
-  <div id="app">
+  <main id="app">
+    <!-- TODO local font instead of link -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/clear-sans.css">
-
+    <header>
+      <h1>2048</h1>
+      <div class="score">
+        <span class="title">Score</span>
+        <br>
+        <span class="value">2033</span>
+      </div>
+      <div class="score">
+        <span class="title">Best</span>
+        <br>
+        <span class="value">20000</span>
+      </div>
+      <h2>Join the numbers and get to the
+        <b>2048 tile!</b>
+      </h2>
+      <button class="new-game" @click="resetBoard()">New Game</button>
+    </header>
     <section id="board">
       <div v-for="(element,index) of board.values()" :key="index" :class="`value-${element}`">
-        <span>{{element }}</span>
+        <span>{{element || ''}}</span>
       </div>
     </section>
-    <button @click="resetBoard()">Reset</button>
-    <button @click="random()">random</button>
-  </div>
+  </main>
 </template>
 
 
@@ -38,7 +53,7 @@ export default Vue.extend({
     })
   },
   methods: {
-    ...mapMutations(['resetBoard', 'random']),
+    ...mapMutations(['resetBoard']),
     ...mapActions(['move'])
   },
   computed: {
@@ -48,22 +63,71 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-// Read the colors from the colors.json file
-$mainFont = 'Clear Sans', Arial, Helvetica, sans-serif;
+// Variables
+$vertical-margin = 8vmin;
 
+// Begin Style
+main {
+  margin: $vertical-margin;
+}
+
+header {
+  display: grid;
+  // justify-items: center;
+  // align-content: end;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 5px;
+
+  h1 {
+    grid-column: span 2; // span two columns
+    margin: 0;
+  }
+
+  .score {
+    slightly-round();
+    // background: plum;
+    // display: flex;
+    color: #ffffff;
+    background: #bbada0;
+
+    .title, .value {
+    }
+
+    .title {
+      text-transform: uppercase;
+    }
+
+    .value {
+      font-size: 200%;
+    }
+  }
+
+  h2 {
+    grid-column: span 3;
+  }
+
+  .new-game {
+    slightly-round();
+    background: #8f7a66;
+    color: #ffffff;
+  }
+}
+
+// TODO animations
 #board {
-  $vertical-margin = 8vmin;
   $gap = 3vmin;
+  box-sizing: border-box; // make padding part of the box-content
   background: $colors.boardBackground;
   display: grid;
   grid-gap: $gap;
   grid-template-columns: repeat(4, 1fr);
-  margin: $vertical-margin auto;
+  // margin: $vertical-margin auto;
   padding: $gap;
-  width: 'calc(93vmin - 21px - 2*%s)' % $vertical-margin;
+  width: 100%;
+  border-radius: 8px;
 
   >div {
-    border-radius: 5px;
+    slightly-round();
     position: relative;
 
     &::before {
@@ -73,7 +137,6 @@ $mainFont = 'Clear Sans', Arial, Helvetica, sans-serif;
     }
 
     >span {
-      font-family: $mainFont;
       font-size: 9vmin;
       font-weight: bold;
       left: 50%;

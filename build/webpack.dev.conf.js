@@ -53,10 +53,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true
     }),
+    // import styles that should be availabe to every component
     new webpack.LoaderOptionsPlugin({
       options: {
         stylus: {
-          import: [path.resolve(__dirname, '../src/assets/style/global.styl')]
+          import: [
+            path.resolve(__dirname, '../src/assets/style/global.styl'),
+            path.resolve(__dirname, '../src/assets/style/reset.styl'),
+            path.resolve(__dirname, '../src/assets/style/mixins.styl')
+          ]
         }
       }
     })

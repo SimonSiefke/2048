@@ -2,11 +2,13 @@
   "backgroundColors": {
     "0": ["rgba(238, 228, 218, 0.35)", false],
     "2": ["#eee4da", false],
-    "4": ["#f2b179", true],
-    "8": ["#f78e48", true],
-    "16": ["#fc5e2e", true],
-    "32": ["#ff3333", true],
-    "64": ["#ff0000", true]
+    "4": ["#ede0c8", false],
+    "8": ["rgb(242, 177, 121)", true],
+    "16": ["rgb(245, 149, 99)", true],
+    "32": ["rgb(246, 124, 95)", true],
+    "64": ["rgb(246, 94, 59)", true],
+    "128": ["rgb(237, 207, 114)", true],
+    "256": ["rgb(237, 204, 97)", true]
   },
   "foregroundColors": {
     "light": "#fff",
