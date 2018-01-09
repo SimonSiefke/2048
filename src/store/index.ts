@@ -32,6 +32,13 @@ const mutations = {
     state.board.setValue(cell, 0)
   },
   random(state: State) {
+    // deprecated
+    const newCell = state.board.randomEmptyCell()
+    if (newCell) {
+      state.board.setValue(newCell, 2)
+    }
+  },
+  createNewRandomCell(state: State) {
     const newCell = state.board.randomEmptyCell()
     if (newCell) {
       state.board.setValue(newCell, 2)
@@ -107,6 +114,7 @@ const actions = {
         }
       }
     }
+    commit('createNewRandomCell')
   }
 }
 

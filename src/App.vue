@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,regular,700" rel="stylesheet" />
-    <!-- <h1>2048</h1> -->
     <section id="board">
       <div v-for="(element,index) of board.values()" :key="index" :class="`value-${element}`">
         <span>{{element }}</span>
@@ -9,7 +8,6 @@
     </section>
     <button @click="resetBoard()">Reset</button>
     <button @click="random()">random</button>
-    <button @click="move('right')">move</button>
   </div>
 </template>
 
