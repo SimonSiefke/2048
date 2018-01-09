@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { Board } from '~/Board'
-import { Cell, Direction, DirectionVector } from '~/types'
+import { State, Cell, Direction, DirectionVector } from '~/types'
 import { createDirectionVector } from '~/helpers'
 
 Vue.use(Vuex)
@@ -13,17 +13,18 @@ const vectors = {
   left: { x: -1, y: 0 } // Left
 }
 
-interface State {
-  board: Board
-}
-
 const state: State = {
-  board: new Board()
+  board: new Board(),
+  score: {
+    current: 0,
+    best: 0
+  }
 }
 
 const mutations = {
   resetBoard(state: State) {
     state.board.reset()
+    Vue.set(state.score, 'current', 0)
   },
   updateCell(state: State, { cell, value }: { cell: Cell; value: number }) {
     state.board.setValue(cell, value)
@@ -43,6 +44,9 @@ const mutations = {
     if (newCell) {
       state.board.setValue(newCell, 2)
     }
+  },
+  addToScore(state: State, value: number) {
+    Vue.set(state.score, 'current', state.score.current + value)
   }
 }
 
@@ -105,6 +109,8 @@ const actions = {
             !mergedCells.find(cell => cell.x === next.x && cell.y === next.y)
           ) {
             dispatch('mergeCells', { oldCell: currentCell, newCell: next })
+            const newValue = state.board.getValue(next)
+            commit('addToScore', newValue)
             mergedCells.push(next)
           }
           console.table(mergedCells)

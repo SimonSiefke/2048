@@ -7,12 +7,12 @@
       <div class="score">
         <span class="title">Score</span>
         <br>
-        <span class="value">2033</span>
+        <span class="value">{{score.current}}</span>
       </div>
       <div class="score">
         <span class="title">Best</span>
         <br>
-        <span class="value">20000</span>
+        <span class="value">{{score.best}}</span>
       </div>
       <h2>Join the numbers and get to the
         <b>2048 tile!</b>
@@ -57,7 +57,7 @@ export default Vue.extend({
     ...mapActions(['move'])
   },
   computed: {
-    ...mapState(['board'])
+    ...mapState(['board', 'score'])
   }
 })
 </script>
