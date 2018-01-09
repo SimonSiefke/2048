@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { Board } from '~/Board'
-import { Cell } from '~/types'
+import { Cell, Direction, DirectionVector } from '~/types'
+import { createDirectionVector } from '~/helpers'
 
 Vue.use(Vuex)
 
@@ -55,42 +56,55 @@ const actions = {
     commit('deleteCell', oldCell)
     commit('updateCell', { cell: newCell, value: newValue })
   },
-  move({
-    state,
-    dispatch,
-    commit
-  }: {
-    state: State
-    commit: Function
-    dispatch: Function
-  }) {
-    const currentCell = { x: 0, y: 0 }
-    commit('updateCell', { cell: currentCell, value: 2 })
+  // TODO split move function into smaller modules
+  move(
+    {
+      state,
+      dispatch,
+      commit
+    }: {
+      state: State
+      commit: Function
+      dispatch: Function
+    },
+    direction: Direction
+  ) {
+    const directionVector = createDirectionVector(direction)
 
-    const x = 0
-    const direction = {
-      x: 0,
-      y: 1
-    }
+    const allCells = state.board.traverseCells(directionVector)
 
-    // the farthest cell to which the current cell can move into the given direction
-    const farthestCell = state.board.farthestPosition(currentCell, direction)
+    for (let currentCell of allCells) {
+      // the farthest cell to which the current cell can move into the given direction
+      const farthestCell = state.board.farthestPosition(
+        currentCell,
+        directionVector
+      )
 
-    // if the current cell can move
-    if (farthestCell) {
-      console.table(farthestCell)
-      // get the next cell in the given direction
-      const next = state.board.nextCell(farthestCell, direction)
+      // keep track of which cells we have already merged, because each cell must only be merged at most once
+      let mergedCells: Cell[] = []
 
-      // if the current cell can merge with the next one
-      if (
-        next &&
-        state.board.getValue(next) === state.board.getValue(currentCell)
-      ) {
-        dispatch('mergeCells', { oldCell: currentCell, newCell: next })
-        console.log('merge')
-      } else {
-        dispatch('moveCell', { fromCell: currentCell, toCell: farthestCell })
+      // if the current cell can move
+      if (farthestCell) {
+        // get the next cell in the given direction
+        const next = state.board.nextCell(farthestCell, directionVector)
+
+        // if the current cell can merge with the next one
+        if (
+          next &&
+          state.board.getValue(next) === state.board.getValue(currentCell)
+        ) {
+          // if the next cell hasn't already merged with another cell
+          if (
+            !mergedCells.find(cell => cell.x === next.x && cell.y === next.y)
+          ) {
+            dispatch('mergeCells', { oldCell: currentCell, newCell: next })
+            mergedCells.push(next)
+          }
+          console.table(mergedCells)
+          console.log('merge')
+        } else {
+          dispatch('moveCell', { fromCell: currentCell, toCell: farthestCell })
+        }
       }
     }
   }

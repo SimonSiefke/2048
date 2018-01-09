@@ -9,7 +9,7 @@
     </section>
     <button @click="resetBoard()">Reset</button>
     <button @click="random()">random</button>
-    <button @click="move()">move</button>
+    <button @click="move('right')">move</button>
   </div>
 </template>
 
@@ -24,30 +24,26 @@ export default Vue.extend({
     window.addEventListener('keyup', e => {
       switch (e.keyCode) {
         case 37: // left arrow
-          console.log('left arrow')
-          this.moveLeft()
+          this.move('left')
           break
         case 38: // up arrow
-          console.log('up arrow')
-          this.moveUp()
+          this.move('up')
           break
         case 39: // right arrow
-          console.log('right arrow')
-          this.moveRight()
+          this.move('right')
           break
         case 40: // down arrow
-          console.log('down arrow')
-          this.moveDown()
+          this.move('down')
           break
       }
     })
   },
   methods: {
-    ...mapMutations(['resetBoard', 'updateCell', 'random']),
-    ...mapActions(['moveCell', 'mergeCells', 'move'])
+    ...mapMutations(['resetBoard', 'random']),
+    ...mapActions(['move'])
   },
   computed: {
-    ...mapState(['board', 'boardSize'])
+    ...mapState(['board'])
   }
 })
 </script>

@@ -1,9 +1,4 @@
-export enum Direction {
-  'up',
-  'down',
-  'left',
-  'right'
-}
+export type Direction = 'up' | 'down' | 'left' | 'right'
 
 export interface DirectionVector {
   x: number

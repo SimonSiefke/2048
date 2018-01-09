@@ -70,7 +70,9 @@ export class Board {
     } while (nextnext && this.isEmpty(nextnext))
     return next
   }
-
+  /**
+   * returns the next cell to the given direction or null if there isn't any
+   */
   nextCell(cell: Cell, direction: DirectionVector) {
     const newCell = {
       x: cell.x + direction.x,
@@ -81,8 +83,8 @@ export class Board {
     }
     return null
   }
-  // keys() {
-  //   return this.board.map(x => this.convertToCell(x))
+  // cells() {
+  //   return this.board.map((_, index) => this._convertIndexToCell(index))
   // }
   values() {
     return this.board
@@ -91,9 +93,19 @@ export class Board {
   reset() {
     this.board = [...Array(this.size ** 2)].fill(0)
   }
-  // findFarthestPosition(cell: Cell, direction: string) {
-  //   // let previousCell = cell
-  //   // do{
-  //   // } while()
-  // }
+
+  traverseCells(directionVector: DirectionVector) {
+    let cells = this.board.map((_, index) => this._convertIndexToCell(index))
+    /* we need to sort the cells in order to compute the right move,
+     so that [0 2 2 2] does not become [0 0 4 2]. */
+
+    // if we want to move up, we must start traversing from the top
+    if (directionVector.x === 1) {
+      cells = cells.sort((cell1, cell2) => cell2.x - cell1.x)
+    } else if (directionVector.y === 1) {
+      // if we want to move right, we must start traversing from the right
+      cells = cells.sort((cell1, cell2) => cell2.y - cell1.y)
+    }
+    return cells
+  }
 }
