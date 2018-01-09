@@ -1,0 +1,17 @@
+{
+  "backgroundColors": {
+    "0": ["rgba(238, 228, 218, 0.35)", false],
+    "2": ["#eee4da", false],
+    "4": ["#f2b179", true],
+    "8": ["#f78e48", true],
+    "16": ["#fc5e2e", true],
+    "32": ["#ff3333", true],
+    "64": ["#ff0000", true]
+  },
+  "foregroundColors": {
+    "light": "#fff",
+    "dark": "#776e65"
+  },
+  "boardBackground": "#bbada0",
+  "pageBackground": "#faf8ef"
+}

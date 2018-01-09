@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,regular,700" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/clear-sans.css">
+
     <section id="board">
       <div v-for="(element,index) of board.values()" :key="index" :class="`value-${element}`">
         <span>{{element }}</span>
@@ -47,14 +48,13 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-body {
-  font-family: Roboto, Arial, Helvetica, sans-serif;
-}
+// Read the colors from the colors.json file
+$mainFont = 'Clear Sans', Arial, Helvetica, sans-serif;
 
 #board {
   $vertical-margin = 8vmin;
   $gap = 3vmin;
-  background: #bbada0;
+  background: $colors.boardBackground;
   display: grid;
   grid-gap: $gap;
   grid-template-columns: repeat(4, 1fr);
@@ -63,14 +63,8 @@ body {
   width: 'calc(93vmin - 21px - 2*%s)' % $vertical-margin;
 
   >div {
-    // background: #eee4da;
     border-radius: 5px;
-    // cursor pointer
     position: relative;
-
-    &:hover {
-      background: lighten(@background, 10%);
-    }
 
     &::before {
       content: '';
@@ -79,7 +73,7 @@ body {
     }
 
     >span {
-      color: #776e65;
+      font-family: $mainFont;
       font-size: 9vmin;
       font-weight: bold;
       left: 50%;
@@ -91,10 +85,9 @@ body {
   }
 }
 
-// Read the colors from the colors.json file and apply them
-colors = json('colors.json', { hash: true });
-backgroundColors = colors.backgroundColors;
-foregroundColors = colors.foregroundColors;
+// apply the colors for each value: 2, 4, 8...
+backgroundColors = $colors.backgroundColors;
+foregroundColors = $colors.foregroundColors;
 
 for value, bg in backgroundColors {
   backgroundColor = bg[0];
