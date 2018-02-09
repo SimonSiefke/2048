@@ -66,7 +66,7 @@ export default Vue.extend({
 // variables
 font-range = 300px 1000px;
 $header-gap = 1rem;
-$max-border-thickness = 1rem;
+$max-border-thickness = 1rem; // todo implement
 
 main {
   margin: auto;
