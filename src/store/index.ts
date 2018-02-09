@@ -46,7 +46,11 @@ const mutations = {
     }
   },
   addToScore(state: State, value: number) {
-    Vue.set(state.score, 'current', state.score.current + value)
+    const newScore = state.score.current + value
+    Vue.set(state.score, 'current', newScore)
+    if (newScore > state.score.best) {
+      Vue.set(state.score, 'best', newScore)
+    }
   }
 }
 

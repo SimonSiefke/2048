@@ -5,8 +5,7 @@
   "author": "Simon <simon.siefke@gmail.com>",
   "private": true,
   "scripts": {
-    "dev":
-      "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
@@ -16,6 +15,7 @@
     "build:doc": "typedoc ./src/*.ts --out ./doc --exclude \"**/main.ts\""
   },
   "dependencies": {
+    "rucksack-css": "^1.0.2",
     "vue": "^2.5.13"
   },
   "devDependencies": {
@@ -88,5 +88,9 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }
