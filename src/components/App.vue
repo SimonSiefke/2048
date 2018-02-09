@@ -54,11 +54,11 @@ export default Vue.extend({
   },
   methods: {
     ...mapMutations(['resetBoard']),
-    ...mapActions(['move'])
+    ...mapActions(['move']),
   },
   computed: {
-    ...mapState(['board', 'score'])
-  }
+    ...mapState(['board', 'score']),
+  },
 })
 </script>
 
