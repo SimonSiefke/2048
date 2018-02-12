@@ -4,18 +4,18 @@
     <link rel="stylesheet" type="text/css" media="screen" href="css/clear-sans.css">
     <header>
       <h1>2048</h1>
-      <div class="score">
-        <span class="title">Score</span>
-        <br>
-        <span class="value">{{score.current}}</span>
-      </div>
-      <div class="score">
-        <span class="title">Best</span>
-        <br>
-        <span class="value">{{score.best}}</span>
+      <div class="score-container">
+        <div class="score">
+          <span class="title">Score</span>
+          <span class="value">{{score.current}}</span>
+        </div>
+        <div class="score">
+          <span class="title">Best</span>
+          <span class="value">{{score.best}}</span>
+        </div>
       </div>
       <h2>Join the numbers and get to the
-        <b>2048 tile!</b>
+        <strong>2048 tile!</strong>
       </h2>
       <button class="new-game" @click="resetBoard()">New Game</button>
     </header>
@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { mapMutations, mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default Vue.extend({
   name: 'app',
@@ -51,10 +51,11 @@ export default Vue.extend({
           break
       }
     })
+
+    this.resetBoard()
   },
   methods: {
-    ...mapMutations(['resetBoard']),
-    ...mapActions(['move']),
+    ...mapActions(['move', 'resetBoard']),
   },
   computed: {
     ...mapState(['board', 'score']),
@@ -63,73 +64,92 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-// Variables
-$vertical-margin = 8vmin;
+// variables
+font-range = 300px 1000px;
+$header-gap = 1rem;
+$max-border-thickness = 1rem; // todo implement
 
-// Begin Style
 main {
-  margin: $vertical-margin;
+  margin: auto;
+  max-width: 33rem;
 }
 
 header {
+  align-items: center;
   display: grid;
-  // justify-items: center;
-  // align-content: end;
-  grid-template-columns: repeat(4, 1fr);
-  grid-column-gap: 5px;
+  grid-column-gap: $header-gap;
+  grid-row-gap: $header-gap;
+  grid-template-columns: 1fr auto;
+  margin-bottom: $header-gap;
 
   h1 {
-    grid-column: span 2; // span two columns
-    margin: 0;
+    font-range;
+    font-size: responsive 2.5rem 7rem;
+  }
+
+  .score-container {
+    display: flex;
   }
 
   .score {
     slightly-round();
-    // background: plum;
-    // display: flex;
-    color: #ffffff;
+    align-items: center;
     background: #bbada0;
+    color: #fff;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 3.5rem;
 
-    .title, .value {
+    // width: 3.5rem;
+    &:first-of-type {
+      margin-right: 0.3rem;
     }
 
     .title {
+      font-size: 0.65rem;
+      margin-top: 0.4rem;
       text-transform: uppercase;
     }
 
     .value {
-      font-size: 200%;
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 0 0.5rem 0.15rem 0.5rem;
     }
   }
 
   h2 {
-    grid-column: span 3;
+    font-range;
+    font-size: responsive 1rem 1.5rem;
+    font-weight: normal;
   }
 
   .new-game {
     slightly-round();
     background: #8f7a66;
     color: #ffffff;
+    padding: 0.7rem 0;
   }
 }
 
 // TODO animations
 #board {
   $gap = 3vmin;
-  box-sizing: border-box; // make padding part of the box-content
   background: $colors.boardBackground;
+  border-radius: 8px;
+  box-sizing: border-box; // make padding part of the box-content
   display: grid;
   grid-gap: $gap;
   grid-template-columns: repeat(4, 1fr);
-  // margin: $vertical-margin auto;
   padding: $gap;
-  width: 100%;
-  border-radius: 8px;
+  width: 100vmin - $gap * 2 -$vertical-margin;
 
   >div {
     slightly-round();
     position: relative;
 
+    // create square
     &::before {
       content: '';
       display: block;
@@ -137,12 +157,13 @@ header {
     }
 
     >span {
-      font-size: 9vmin;
+      font-range: 250px 800px;
+      font-size: responsive 1.2rem 2.9rem;
       font-weight: bold;
       left: 50%;
       position: absolute;
       top: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%); // center the numbers inside sqaure
       user-select: none;
     }
   }

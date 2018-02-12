@@ -24,6 +24,8 @@ const state: State = {
 const mutations = {
   resetBoard(state: State) {
     state.board.reset()
+  },
+  resetCurrentScore(state: State) {
     Vue.set(state.score, 'current', 0)
   },
   updateCell(state: State, { cell, value }: { cell: Cell; value: number }) {
@@ -40,13 +42,19 @@ const mutations = {
     }
   },
   createNewRandomCell(state: State) {
+    console.log(state)
+
     const newCell = state.board.randomEmptyCell()
     if (newCell) {
       state.board.setValue(newCell, 2)
     }
   },
   addToScore(state: State, value: number) {
-    Vue.set(state.score, 'current', state.score.current + value)
+    const newScore = state.score.current + value
+    Vue.set(state.score, 'current', newScore)
+    if (newScore > state.score.best) {
+      Vue.set(state.score, 'best', newScore)
+    }
   }
 }
 
@@ -120,6 +128,12 @@ const actions = {
         }
       }
     }
+    commit('createNewRandomCell')
+  },
+  resetBoard({ state, commit }: { state: State; commit: Function }) {
+    commit('resetBoard')
+    commit('resetCurrentScore')
+    commit('createNewRandomCell')
     commit('createNewRandomCell')
   }
 }
